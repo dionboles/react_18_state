@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import reactLogo from './assets/react.svg';
 import './App.css';
 import store from './store';
 import { useEffect } from 'react';
 const useStore = (selector = (state) => state) => {
-  const [state, setState] = useState(selector(store.getState()));
-  useEffect(() => store.subscribe((state) => setState(selector(state))), []);
-  return state;
+  // This is to sync a external start to react such as the re
+  return useSyncExternalStore(store.subscribe, () =>
+    selector(store.getState())
+  );
 };
 const IncreamentValue = ({ item }) => (
   <button
